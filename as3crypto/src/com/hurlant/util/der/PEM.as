@@ -11,9 +11,9 @@ package com.hurlant.util.der
 	import com.hurlant.crypto.rsa.RSAKey;
 	import com.hurlant.math.BigInteger;
 	import com.hurlant.util.Base64;
+	import com.hurlant.util.Hex;
 	
 	import flash.utils.ByteArray;
-	import com.hurlant.util.Hex;
 	
 	public class PEM
 	{
@@ -75,20 +75,29 @@ package com.hurlant.util.der
 			var obj:* = DER.parse(der);
 			if (obj is Array) {
 				var arr:Array = obj as Array;
-				// arr[0] = [ <some crap that means "rsaEncryption">, null ]; ( apparently, that's an X-509 Algorithm Identifier.
-				if (arr[0][0].toString()!=OID.RSA_ENCRYPTION) {
-					return null;
-				}
-				// arr[1] is a ByteArray begging to be parsed as DER
-				arr[1].position = 0; // there's a 0x00 byte up front. find out why later. like, read a spec.
-				obj = DER.parse(arr[1]);
-				if (obj is Array) {
-					arr = obj as Array;
-					// arr[0] = modulus
-					// arr[1] = public expt.
-					return new RSAKey(arr[0], arr[1]);
+				if(arr[0] is Array) {
+					// arr[0] = [ <some crap that means "rsaEncryption">, null ]; ( apparently, that's an X-509 Algorithm Identifier.
+					if (arr[0][0].toString()!=OID.RSA_ENCRYPTION) {
+						return null;
+					}
+					// arr[1] is a ByteArray begging to be parsed as DER
+					arr[1].position = 0; // there's a 0x00 byte up front. find out why later. like, read a spec.
+					obj = DER.parse(arr[1]);
+					if (obj is Array) {
+						arr = obj as Array;
+						// arr[0] = modulus
+						// arr[1] = public expt.
+						return new RSAKey(arr[0], arr[1]);
+					} else {
+						return null;
+					}
 				} else {
-					return null;
+					//This is an old key format: See http://tools.ietf.org/html/rfc2437
+					//	RSAPublicKey::=SEQUENCE{
+					//		modulus INTEGER, -- n
+					//		publicExponent INTEGER -- e }
+					
+					return new RSAKey(arr[0], arr[1]);
 				}
 			} else {
 				// dunno
