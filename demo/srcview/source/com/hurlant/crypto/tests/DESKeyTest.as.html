@@ -1,0 +1,122 @@
+<!-- saved from url=(0014)about:internet -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>DESKeyTest.as</title>
+<link rel="stylesheet" type="text/css" href="../../../../../SourceStyles.css"/>
+</head>
+
+<body><pre><span class="ActionScriptASDoc">/**
+ * DesKeyTest
+ * 
+ * A test class for DesKey
+ * Copyright (c) 2007 Henri Torgemane
+ * 
+ * See LICENSE.txt for full license information.
+ */</span>
+<span class="ActionScriptpackage">package</span> <span class="ActionScriptDefault_Text">com</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">hurlant</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">crypto</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">tests</span>
+<span class="ActionScriptBracket/Brace">{</span>
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">com</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">hurlant</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">crypto</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">symmetric</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">DESKey</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">com</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">hurlant</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">util</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">Hex</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">flash</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">utils</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">ByteArray</span>;
+    
+    <span class="ActionScriptReserved">public</span> <span class="ActionScriptclass">class</span> <span class="ActionScriptDefault_Text">DESKeyTest</span> <span class="ActionScriptReserved">extends</span> <span class="ActionScriptDefault_Text">TestCase</span>
+    <span class="ActionScriptBracket/Brace">{</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">DESKeyTest</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">h</span>:<span class="ActionScriptDefault_Text">ITestHarness</span><span class="ActionScriptBracket/Brace">)</span>
+        <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptReserved">super</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">h</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptString">"DESKey Test"</span><span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptDefault_Text">runTest</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">testECB</span><span class="ActionScriptOperator">,</span><span class="ActionScriptString">"DES ECB Test Vectors"</span><span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptDefault_Text">h</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">endTestCase</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+        
+        <span class="ActionScriptASDoc">/**
+         * Test vectors mostly grabbed from
+         * http://csrc.nist.gov/publications/nistpubs/800-17/800-17.pdf
+         * (Appendix A and B)
+         * incomplete.
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">testECB</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptReserved">void</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">keys</span>:<span class="ActionScriptDefault_Text">Array</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptBracket/Brace">[</span>
+            <span class="ActionScriptString">"3b3898371520f75e"</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptComment">// grabbed from the output of some js implementation out there
+</span>            <span class="ActionScriptString">"10316E028C8F3B4A"</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptComment">// appendix A vector
+</span>            <span class="ActionScriptString">"0101010101010101"</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptComment">// appendix B Table 1, round 0
+</span>            <span class="ActionScriptString">"0101010101010101"</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptComment">// round 1
+</span>            <span class="ActionScriptString">"0101010101010101"</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptComment">// 2
+</span>            <span class="ActionScriptString">"0101010101010101"</span><span class="ActionScriptOperator">,</span> 
+            <span class="ActionScriptString">"0101010101010101"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"0101010101010101"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"0101010101010101"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"0101010101010101"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"0101010101010101"</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptComment">// round 8
+</span>            <span class="ActionScriptString">"8001010101010101"</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptComment">// app B, tbl 2, round 0
+</span>            <span class="ActionScriptString">"4001010101010101"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"2001010101010101"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"1001010101010101"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"0801010101010101"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"0401010101010101"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"0201010101010101"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"0180010101010101"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"0140010101010101"</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptComment">// round 8
+</span>             <span class="ActionScriptBracket/Brace">]</span>;
+            <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">pts</span>:<span class="ActionScriptDefault_Text">Array</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptBracket/Brace">[</span>
+            <span class="ActionScriptString">"0000000000000000"</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptComment">// js
+</span>            <span class="ActionScriptString">"0000000000000000"</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptComment">// App A
+</span>            <span class="ActionScriptString">"8000000000000000"</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptComment">// App B, tbl 1, rnd0
+</span>            <span class="ActionScriptString">"4000000000000000"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"2000000000000000"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"1000000000000000"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"0800000000000000"</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptComment">// rnd 4
+</span>            <span class="ActionScriptString">"0400000000000000"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"0200000000000000"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"0100000000000000"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"0080000000000000"</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptComment">// round 8
+</span>            <span class="ActionScriptString">"0000000000000000"</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptComment">// App B, tbl2, rnd0
+</span>            <span class="ActionScriptString">"0000000000000000"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"0000000000000000"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"0000000000000000"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"0000000000000000"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"0000000000000000"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"0000000000000000"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"0000000000000000"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"0000000000000000"</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptComment">// rnd 8
+</span>             <span class="ActionScriptBracket/Brace">]</span>;
+            <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">cts</span>:<span class="ActionScriptDefault_Text">Array</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptBracket/Brace">[</span>
+            <span class="ActionScriptString">"83A1E814889253E0"</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptComment">// js
+</span>            <span class="ActionScriptString">"82DCBAFBDEAB6602"</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptComment">// App A
+</span>            <span class="ActionScriptString">"95F8A5E5DD31D900"</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptComment">// App b, tbl 1, rnd 0
+</span>            <span class="ActionScriptString">"DD7F121CA5015619"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"2E8653104F3834EA"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"4BD388FF6CD81D4F"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"20B9E767B2FB1456"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"55579380D77138EF"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"6CC5DEFAAF04512F"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"0D9F279BA5D87260"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"D9031B0271BD5A0A"</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptComment">// rnd 8
+</span>            <span class="ActionScriptString">"95A8D72813DAA94D"</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptComment">// App B, tbl 2, rnd 0
+</span>            <span class="ActionScriptString">"0EEC1487DD8C26D5"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"7AD16FFB79C45926"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"D3746294CA6A6CF3"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"809F5F873C1FD761"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"C02FAFFEC989D1FC"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"4615AA1D33E72F10"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"2055123350C00858"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"DF3B99D6577397C8"</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptComment">// rnd 8
+</span>             <span class="ActionScriptBracket/Brace">]</span>;
+            
+            <span class="ActionScriptReserved">for</span> <span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">i</span>:<span class="ActionScriptDefault_Text">uint</span><span class="ActionScriptOperator">=</span>0;<span class="ActionScriptDefault_Text">i</span><span class="ActionScriptOperator">&lt;</span><span class="ActionScriptDefault_Text">keys</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">length</span>;<span class="ActionScriptDefault_Text">i</span><span class="ActionScriptOperator">++</span><span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptBracket/Brace">{</span>
+                <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">key</span>:<span class="ActionScriptDefault_Text">ByteArray</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">Hex</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">toArray</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">keys</span><span class="ActionScriptBracket/Brace">[</span><span class="ActionScriptDefault_Text">i</span><span class="ActionScriptBracket/Brace">]</span><span class="ActionScriptBracket/Brace">)</span>;
+                <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">pt</span>:<span class="ActionScriptDefault_Text">ByteArray</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">Hex</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">toArray</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">pts</span><span class="ActionScriptBracket/Brace">[</span><span class="ActionScriptDefault_Text">i</span><span class="ActionScriptBracket/Brace">]</span><span class="ActionScriptBracket/Brace">)</span>;
+                <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">des</span>:<span class="ActionScriptDefault_Text">DESKey</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptReserved">new</span> <span class="ActionScriptDefault_Text">DESKey</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">key</span><span class="ActionScriptBracket/Brace">)</span>;
+                <span class="ActionScriptDefault_Text">des</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">encrypt</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">pt</span><span class="ActionScriptBracket/Brace">)</span>;
+                <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">out</span>:<span class="ActionScriptDefault_Text">String</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">Hex</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">fromArray</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">pt</span><span class="ActionScriptBracket/Brace">)</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">toUpperCase</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>;
+                <span class="ActionScriptDefault_Text">assert</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptString">"comparing "</span><span class="ActionScriptOperator">+</span><span class="ActionScriptDefault_Text">cts</span><span class="ActionScriptBracket/Brace">[</span><span class="ActionScriptDefault_Text">i</span><span class="ActionScriptBracket/Brace">]</span><span class="ActionScriptOperator">+</span><span class="ActionScriptString">" to "</span><span class="ActionScriptOperator">+</span><span class="ActionScriptDefault_Text">out</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">cts</span><span class="ActionScriptBracket/Brace">[</span><span class="ActionScriptDefault_Text">i</span><span class="ActionScriptBracket/Brace">]</span><span class="ActionScriptOperator">==</span><span class="ActionScriptDefault_Text">out</span><span class="ActionScriptBracket/Brace">)</span>;
+                <span class="ActionScriptComment">// now go back to plaintext
+</span>                <span class="ActionScriptDefault_Text">des</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">decrypt</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">pt</span><span class="ActionScriptBracket/Brace">)</span>;
+                <span class="ActionScriptDefault_Text">out</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">Hex</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">fromArray</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">pt</span><span class="ActionScriptBracket/Brace">)</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">toUpperCase</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>;
+                <span class="ActionScriptDefault_Text">assert</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptString">"comparing "</span><span class="ActionScriptOperator">+</span><span class="ActionScriptDefault_Text">pts</span><span class="ActionScriptBracket/Brace">[</span><span class="ActionScriptDefault_Text">i</span><span class="ActionScriptBracket/Brace">]</span><span class="ActionScriptOperator">+</span><span class="ActionScriptString">" to "</span><span class="ActionScriptOperator">+</span><span class="ActionScriptDefault_Text">out</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">pts</span><span class="ActionScriptBracket/Brace">[</span><span class="ActionScriptDefault_Text">i</span><span class="ActionScriptBracket/Brace">]</span><span class="ActionScriptOperator">==</span><span class="ActionScriptDefault_Text">out</span><span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptBracket/Brace">}</span>
+        <span class="ActionScriptBracket/Brace">}</span>
+    <span class="ActionScriptBracket/Brace">}</span>
+<span class="ActionScriptBracket/Brace">}</span></pre></body>
+</html>

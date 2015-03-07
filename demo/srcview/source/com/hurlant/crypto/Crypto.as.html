@@ -1,0 +1,283 @@
+<!-- saved from url=(0014)about:internet -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>Crypto.as</title>
+<link rel="stylesheet" type="text/css" href="../../../../SourceStyles.css"/>
+</head>
+
+<body><pre><span class="ActionScriptASDoc">/**
+ * Crypto
+ * 
+ * An abstraction layer to instanciate our crypto algorithms
+ * Copyright (c) 2007 Henri Torgemane
+ * 
+ * See LICENSE.txt for full license information.
+ */</span>
+<span class="ActionScriptpackage">package</span> <span class="ActionScriptDefault_Text">com</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">hurlant</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">crypto</span>
+<span class="ActionScriptBracket/Brace">{</span>
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">com</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">hurlant</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">crypto</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">hash</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">HMAC</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">com</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">hurlant</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">crypto</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">hash</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">IHash</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">com</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">hurlant</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">crypto</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">hash</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">MD2</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">com</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">hurlant</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">crypto</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">hash</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">MD5</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">com</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">hurlant</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">crypto</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">hash</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">SHA1</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">com</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">hurlant</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">crypto</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">hash</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">SHA224</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">com</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">hurlant</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">crypto</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">hash</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">SHA256</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">com</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">hurlant</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">crypto</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">prng</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">ARC4</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">com</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">hurlant</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">crypto</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">rsa</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">RSAKey</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">com</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">hurlant</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">crypto</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">symmetric</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">AESKey</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">com</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">hurlant</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">crypto</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">symmetric</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">BlowFishKey</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">com</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">hurlant</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">crypto</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">symmetric</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">CBCMode</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">com</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">hurlant</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">crypto</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">symmetric</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">CFB8Mode</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">com</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">hurlant</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">crypto</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">symmetric</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">CFBMode</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">com</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">hurlant</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">crypto</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">symmetric</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">CTRMode</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">com</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">hurlant</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">crypto</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">symmetric</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">DESKey</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">com</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">hurlant</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">crypto</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">symmetric</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">ECBMode</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">com</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">hurlant</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">crypto</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">symmetric</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">ICipher</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">com</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">hurlant</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">crypto</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">symmetric</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">IMode</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">com</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">hurlant</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">crypto</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">symmetric</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">IPad</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">com</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">hurlant</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">crypto</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">symmetric</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">ISymmetricKey</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">com</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">hurlant</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">crypto</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">symmetric</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">IVMode</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">com</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">hurlant</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">crypto</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">symmetric</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">NullPad</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">com</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">hurlant</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">crypto</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">symmetric</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">OFBMode</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">com</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">hurlant</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">crypto</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">symmetric</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">PKCS5</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">com</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">hurlant</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">crypto</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">symmetric</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">SimpleIVMode</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">com</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">hurlant</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">crypto</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">symmetric</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">TripleDESKey</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">com</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">hurlant</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">crypto</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">symmetric</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">XTeaKey</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">com</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">hurlant</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">util</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">Base64</span>;
+    
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">flash</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">utils</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">ByteArray</span>;
+    
+    <span class="ActionScriptASDoc">/**
+     * A class to make it easy to use the rest of the framework.
+     * As a side-effect, using this class will cause most of the framework
+     * to be linked into your application, which is not always what you want.
+     * 
+     * If you want to optimize your download size, don't use this class.
+     * (But feel free to read it to get ideas on how to get the algorithm you want.)
+     */</span>
+    <span class="ActionScriptReserved">public</span> <span class="ActionScriptclass">class</span> <span class="ActionScriptDefault_Text">Crypto</span>
+    <span class="ActionScriptBracket/Brace">{</span>
+        <span class="ActionScriptReserved">private</span> <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">b64</span>:<span class="ActionScriptDefault_Text">Base64</span>; <span class="ActionScriptComment">// we don't use it, but we want the swc to include it, so cheap trick.
+</span>        
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">Crypto</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span><span class="ActionScriptBracket/Brace">{</span>
+        <span class="ActionScriptBracket/Brace">}</span>
+        
+        <span class="ActionScriptASDoc">/**
+         * Things that should work, among others:
+         *  "aes"
+         *  "aes-128-ecb"
+         *  "aes-128-cbc"
+         *  "aes-128-cfb"
+         *  "aes-128-cfb8"
+         *  "aes-128-ofb"
+         *  "aes-192-cfb"
+         *  "aes-256-ofb"
+         *  "blowfish-cbc"
+         *  "des-ecb"
+         *  "xtea"
+         *  "xtea-ecb"
+         *  "xtea-cbc"
+         *  "xtea-cfb"
+         *  "xtea-cfb8"
+         *  "xtea-ofb"
+         *  "rc4"
+         *  "simple-aes-cbc"
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptReserved">static</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">getCipher</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">name</span>:<span class="ActionScriptDefault_Text">String</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">key</span>:<span class="ActionScriptDefault_Text">ByteArray</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">pad</span>:<span class="ActionScriptDefault_Text">IPad</span><span class="ActionScriptOperator">=</span><span class="ActionScriptReserved">null</span><span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">ICipher</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptComment">// split name into an array.
+</span>            <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">keys</span>:<span class="ActionScriptDefault_Text">Array</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">name</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">split</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptString">"-"</span><span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptReserved">switch</span> <span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">keys</span><span class="ActionScriptBracket/Brace">[</span>0<span class="ActionScriptBracket/Brace">]</span><span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptBracket/Brace">{</span>
+                <span class="ActionScriptASDoc">/**
+                 * "simple" is a special case. It means:
+                 * "If using an IV mode, prepend the IV to the ciphertext"
+                 */</span>
+                <span class="ActionScriptReserved">case</span> <span class="ActionScriptString">"simple"</span>:
+                    <span class="ActionScriptDefault_Text">keys</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">shift</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>;
+                    <span class="ActionScriptDefault_Text">name</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">keys</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">join</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptString">"-"</span><span class="ActionScriptBracket/Brace">)</span>;
+                    <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">cipher</span>:<span class="ActionScriptDefault_Text">ICipher</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">getCipher</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">name</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">key</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">pad</span><span class="ActionScriptBracket/Brace">)</span>;
+                    <span class="ActionScriptReserved">if</span> <span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">cipher</span> <span class="ActionScriptReserved">is</span> <span class="ActionScriptDefault_Text">IVMode</span><span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptBracket/Brace">{</span>
+                        <span class="ActionScriptReserved">return</span> <span class="ActionScriptReserved">new</span> <span class="ActionScriptDefault_Text">SimpleIVMode</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">cipher</span> <span class="ActionScriptReserved">as</span> <span class="ActionScriptDefault_Text">IVMode</span><span class="ActionScriptBracket/Brace">)</span>;
+                    <span class="ActionScriptBracket/Brace">}</span> <span class="ActionScriptReserved">else</span> <span class="ActionScriptBracket/Brace">{</span>
+                        <span class="ActionScriptReserved">return</span> <span class="ActionScriptDefault_Text">cipher</span>;
+                    <span class="ActionScriptBracket/Brace">}</span>
+                <span class="ActionScriptASDoc">/**
+                 * we support both "aes-128" and "aes128"
+                 * Technically, you could use "aes192-128", but you'd
+                 * only be hurting yourself.
+                 */</span>
+                <span class="ActionScriptReserved">case</span> <span class="ActionScriptString">"aes"</span>:
+                <span class="ActionScriptReserved">case</span> <span class="ActionScriptString">"aes128"</span>:
+                <span class="ActionScriptReserved">case</span> <span class="ActionScriptString">"aes192"</span>:
+                <span class="ActionScriptReserved">case</span> <span class="ActionScriptString">"aes256"</span>:
+                    <span class="ActionScriptDefault_Text">keys</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">shift</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>;
+                    <span class="ActionScriptReserved">if</span> <span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">key</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">length</span><span class="ActionScriptOperator">*</span>8<span class="ActionScriptOperator">==</span><span class="ActionScriptDefault_Text">keys</span><span class="ActionScriptBracket/Brace">[</span>0<span class="ActionScriptBracket/Brace">]</span><span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptBracket/Brace">{</span>
+                        <span class="ActionScriptComment">// support for "aes-128-..." and such.
+</span>                        <span class="ActionScriptDefault_Text">keys</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">shift</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>;
+                    <span class="ActionScriptBracket/Brace">}</span>
+                    <span class="ActionScriptReserved">return</span> <span class="ActionScriptDefault_Text">getMode</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">keys</span><span class="ActionScriptBracket/Brace">[</span>0<span class="ActionScriptBracket/Brace">]</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptReserved">new</span> <span class="ActionScriptDefault_Text">AESKey</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">key</span><span class="ActionScriptBracket/Brace">)</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">pad</span><span class="ActionScriptBracket/Brace">)</span>;
+                <span class="ActionScriptReserved">break</span>;
+                <span class="ActionScriptReserved">case</span> <span class="ActionScriptString">"bf"</span>:
+                <span class="ActionScriptReserved">case</span> <span class="ActionScriptString">"blowfish"</span>:
+                    <span class="ActionScriptDefault_Text">keys</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">shift</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>;
+                    <span class="ActionScriptReserved">return</span> <span class="ActionScriptDefault_Text">getMode</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">keys</span><span class="ActionScriptBracket/Brace">[</span>0<span class="ActionScriptBracket/Brace">]</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptReserved">new</span> <span class="ActionScriptDefault_Text">BlowFishKey</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">key</span><span class="ActionScriptBracket/Brace">)</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">pad</span><span class="ActionScriptBracket/Brace">)</span>;
+                <span class="ActionScriptASDoc">/**
+                 * des-ede and des-ede3 are both equivalent to des3.
+                 * the choice between 2tdes and 3tdes is made based
+                 * on the length of the key provided.
+                 */</span>
+                <span class="ActionScriptReserved">case</span> <span class="ActionScriptString">"des"</span>:
+                    <span class="ActionScriptDefault_Text">keys</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">shift</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>;
+                    <span class="ActionScriptReserved">if</span> <span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">keys</span><span class="ActionScriptBracket/Brace">[</span>0<span class="ActionScriptBracket/Brace">]</span><span class="ActionScriptOperator">!=</span><span class="ActionScriptString">"ede"</span> <span class="ActionScriptOperator">&amp;&amp;</span> <span class="ActionScriptDefault_Text">keys</span><span class="ActionScriptBracket/Brace">[</span>0<span class="ActionScriptBracket/Brace">]</span><span class="ActionScriptOperator">!=</span><span class="ActionScriptString">"ede3"</span><span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptBracket/Brace">{</span>
+                        <span class="ActionScriptReserved">return</span> <span class="ActionScriptDefault_Text">getMode</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">keys</span><span class="ActionScriptBracket/Brace">[</span>0<span class="ActionScriptBracket/Brace">]</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptReserved">new</span> <span class="ActionScriptDefault_Text">DESKey</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">key</span><span class="ActionScriptBracket/Brace">)</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">pad</span><span class="ActionScriptBracket/Brace">)</span>;
+                    <span class="ActionScriptBracket/Brace">}</span>
+                    <span class="ActionScriptReserved">if</span> <span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">keys</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">length</span><span class="ActionScriptOperator">==</span>1<span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptBracket/Brace">{</span>
+                        <span class="ActionScriptDefault_Text">keys</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">push</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptString">"ecb"</span><span class="ActionScriptBracket/Brace">)</span>; <span class="ActionScriptComment">// default mode for 2tdes and 3tdes with openssl enc
+</span>                    <span class="ActionScriptBracket/Brace">}</span>
+                    <span class="ActionScriptComment">// fall-through to triple des
+</span>                <span class="ActionScriptReserved">case</span> <span class="ActionScriptString">"3des"</span>:
+                <span class="ActionScriptReserved">case</span> <span class="ActionScriptString">"des3"</span>:
+                    <span class="ActionScriptDefault_Text">keys</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">shift</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>;
+                    <span class="ActionScriptReserved">return</span> <span class="ActionScriptDefault_Text">getMode</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">keys</span><span class="ActionScriptBracket/Brace">[</span>0<span class="ActionScriptBracket/Brace">]</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptReserved">new</span> <span class="ActionScriptDefault_Text">TripleDESKey</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">key</span><span class="ActionScriptBracket/Brace">)</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">pad</span><span class="ActionScriptBracket/Brace">)</span>;
+                <span class="ActionScriptReserved">case</span> <span class="ActionScriptString">"xtea"</span>:
+                    <span class="ActionScriptDefault_Text">keys</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">shift</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>;
+                    <span class="ActionScriptReserved">return</span> <span class="ActionScriptDefault_Text">getMode</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">keys</span><span class="ActionScriptBracket/Brace">[</span>0<span class="ActionScriptBracket/Brace">]</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptReserved">new</span> <span class="ActionScriptDefault_Text">XTeaKey</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">key</span><span class="ActionScriptBracket/Brace">)</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">pad</span><span class="ActionScriptBracket/Brace">)</span>;
+                <span class="ActionScriptReserved">break</span>;
+                <span class="ActionScriptASDoc">/**
+                 * Technically, you could say "rc4-128" or whatever,
+                 * but really, the length of the key is what counts here.
+                 */</span>
+                <span class="ActionScriptReserved">case</span> <span class="ActionScriptString">"rc4"</span>:
+                    <span class="ActionScriptDefault_Text">keys</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">shift</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>;
+                    <span class="ActionScriptReserved">return</span> <span class="ActionScriptReserved">new</span> <span class="ActionScriptDefault_Text">ARC4</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">key</span><span class="ActionScriptBracket/Brace">)</span>;
+                <span class="ActionScriptReserved">break</span>;
+            <span class="ActionScriptBracket/Brace">}</span>
+            <span class="ActionScriptReserved">return</span> <span class="ActionScriptReserved">null</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+        
+        <span class="ActionScriptASDoc">/**
+         * Returns the size of a key for a given cipher identifier.
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptReserved">static</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">getKeySize</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">name</span>:<span class="ActionScriptDefault_Text">String</span><span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">uint</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">keys</span>:<span class="ActionScriptDefault_Text">Array</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">name</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">split</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptString">"-"</span><span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptReserved">switch</span> <span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">keys</span><span class="ActionScriptBracket/Brace">[</span>0<span class="ActionScriptBracket/Brace">]</span><span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptBracket/Brace">{</span>
+                <span class="ActionScriptReserved">case</span> <span class="ActionScriptString">"simple"</span>:
+                    <span class="ActionScriptDefault_Text">keys</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">shift</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>;
+                    <span class="ActionScriptReserved">return</span> <span class="ActionScriptDefault_Text">getKeySize</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">keys</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">join</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptString">"-"</span><span class="ActionScriptBracket/Brace">)</span><span class="ActionScriptBracket/Brace">)</span>;
+                <span class="ActionScriptReserved">case</span> <span class="ActionScriptString">"aes128"</span>:
+                    <span class="ActionScriptReserved">return</span> 16;
+                <span class="ActionScriptReserved">case</span> <span class="ActionScriptString">"aes192"</span>:
+                    <span class="ActionScriptReserved">return</span> 24;
+                <span class="ActionScriptReserved">case</span> <span class="ActionScriptString">"aes256"</span>:
+                    <span class="ActionScriptReserved">return</span> 32;
+                <span class="ActionScriptReserved">case</span> <span class="ActionScriptString">"aes"</span>:
+                    <span class="ActionScriptDefault_Text">keys</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">shift</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>;
+                    <span class="ActionScriptReserved">return</span> <span class="ActionScriptDefault_Text">parseInt</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">keys</span><span class="ActionScriptBracket/Brace">[</span>0<span class="ActionScriptBracket/Brace">]</span><span class="ActionScriptBracket/Brace">)</span><span class="ActionScriptOperator">/</span>8;
+                <span class="ActionScriptReserved">case</span> <span class="ActionScriptString">"bf"</span>:
+                <span class="ActionScriptReserved">case</span> <span class="ActionScriptString">"blowfish"</span>:
+                    <span class="ActionScriptReserved">return</span> 16;
+                <span class="ActionScriptReserved">case</span> <span class="ActionScriptString">"des"</span>:
+                    <span class="ActionScriptDefault_Text">keys</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">shift</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>;
+                    <span class="ActionScriptReserved">switch</span> <span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">keys</span><span class="ActionScriptBracket/Brace">[</span>0<span class="ActionScriptBracket/Brace">]</span><span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptBracket/Brace">{</span>
+                        <span class="ActionScriptReserved">case</span> <span class="ActionScriptString">"ede"</span>:
+                            <span class="ActionScriptReserved">return</span> 16;
+                        <span class="ActionScriptReserved">case</span> <span class="ActionScriptString">"ede3"</span>:
+                            <span class="ActionScriptReserved">return</span> 24;
+                        <span class="ActionScriptReserved">default</span>:
+                            <span class="ActionScriptReserved">return</span> 8;
+                    <span class="ActionScriptBracket/Brace">}</span>
+                <span class="ActionScriptReserved">case</span> <span class="ActionScriptString">"3des"</span>:
+                <span class="ActionScriptReserved">case</span> <span class="ActionScriptString">"des3"</span>:
+                    <span class="ActionScriptReserved">return</span> 24;
+                <span class="ActionScriptReserved">case</span> <span class="ActionScriptString">"xtea"</span>:
+                    <span class="ActionScriptReserved">return</span> 8;
+                <span class="ActionScriptReserved">case</span> <span class="ActionScriptString">"rc4"</span>:
+                    <span class="ActionScriptReserved">if</span> <span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">parseInt</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">keys</span><span class="ActionScriptBracket/Brace">[</span>1<span class="ActionScriptBracket/Brace">]</span><span class="ActionScriptBracket/Brace">)</span><span class="ActionScriptOperator">&gt;</span>0<span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptBracket/Brace">{</span>
+                        <span class="ActionScriptReserved">return</span> <span class="ActionScriptDefault_Text">parseInt</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">keys</span><span class="ActionScriptBracket/Brace">[</span>1<span class="ActionScriptBracket/Brace">]</span><span class="ActionScriptBracket/Brace">)</span><span class="ActionScriptOperator">/</span>8;
+                    <span class="ActionScriptBracket/Brace">}</span>
+                    <span class="ActionScriptReserved">return</span> 16; <span class="ActionScriptComment">// why not.
+</span>            <span class="ActionScriptBracket/Brace">}</span>
+            <span class="ActionScriptReserved">return</span> 0; <span class="ActionScriptComment">// unknown;
+</span>        <span class="ActionScriptBracket/Brace">}</span>
+        
+        <span class="ActionScriptReserved">private</span> <span class="ActionScriptReserved">static</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">getMode</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">name</span>:<span class="ActionScriptDefault_Text">String</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">alg</span>:<span class="ActionScriptDefault_Text">ISymmetricKey</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">padding</span>:<span class="ActionScriptDefault_Text">IPad</span><span class="ActionScriptOperator">=</span><span class="ActionScriptReserved">null</span><span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">IMode</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptReserved">switch</span> <span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">name</span><span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptBracket/Brace">{</span>
+                <span class="ActionScriptReserved">case</span> <span class="ActionScriptString">"ecb"</span>:
+                    <span class="ActionScriptReserved">return</span> <span class="ActionScriptReserved">new</span> <span class="ActionScriptDefault_Text">ECBMode</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">alg</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">padding</span><span class="ActionScriptBracket/Brace">)</span>;
+                <span class="ActionScriptReserved">case</span> <span class="ActionScriptString">"cfb"</span>:
+                    <span class="ActionScriptReserved">return</span> <span class="ActionScriptReserved">new</span> <span class="ActionScriptDefault_Text">CFBMode</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">alg</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">padding</span><span class="ActionScriptBracket/Brace">)</span>;
+                <span class="ActionScriptReserved">case</span> <span class="ActionScriptString">"cfb8"</span>:
+                    <span class="ActionScriptReserved">return</span> <span class="ActionScriptReserved">new</span> <span class="ActionScriptDefault_Text">CFB8Mode</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">alg</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">padding</span><span class="ActionScriptBracket/Brace">)</span>;
+                <span class="ActionScriptReserved">case</span> <span class="ActionScriptString">"ofb"</span>:
+                    <span class="ActionScriptReserved">return</span> <span class="ActionScriptReserved">new</span> <span class="ActionScriptDefault_Text">OFBMode</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">alg</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">padding</span><span class="ActionScriptBracket/Brace">)</span>;
+                <span class="ActionScriptReserved">case</span> <span class="ActionScriptString">"ctr"</span>:
+                    <span class="ActionScriptReserved">return</span> <span class="ActionScriptReserved">new</span> <span class="ActionScriptDefault_Text">CTRMode</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">alg</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">padding</span><span class="ActionScriptBracket/Brace">)</span>;
+                <span class="ActionScriptReserved">case</span> <span class="ActionScriptString">"cbc"</span>:
+                <span class="ActionScriptReserved">default</span>:
+                    <span class="ActionScriptReserved">return</span> <span class="ActionScriptReserved">new</span> <span class="ActionScriptDefault_Text">CBCMode</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">alg</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">padding</span><span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptBracket/Brace">}</span>
+        <span class="ActionScriptBracket/Brace">}</span>
+        
+        <span class="ActionScriptASDoc">/**
+         * Things that should work:
+         * "md5"
+         * "sha"
+         * "sha1"
+         * "sha224"
+         * "sha256"
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptReserved">static</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">getHash</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">name</span>:<span class="ActionScriptDefault_Text">String</span><span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">IHash</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptReserved">switch</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">name</span><span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptBracket/Brace">{</span>
+                <span class="ActionScriptReserved">case</span> <span class="ActionScriptString">"md2"</span>:
+                    <span class="ActionScriptReserved">return</span> <span class="ActionScriptReserved">new</span> <span class="ActionScriptDefault_Text">MD2</span>;
+                <span class="ActionScriptReserved">case</span> <span class="ActionScriptString">"md5"</span>:
+                    <span class="ActionScriptReserved">return</span> <span class="ActionScriptReserved">new</span> <span class="ActionScriptDefault_Text">MD5</span>;
+                <span class="ActionScriptReserved">case</span> <span class="ActionScriptString">"sha"</span>: <span class="ActionScriptComment">// let's hope you didn't mean sha-0
+</span>                <span class="ActionScriptReserved">case</span> <span class="ActionScriptString">"sha1"</span>:
+                    <span class="ActionScriptReserved">return</span> <span class="ActionScriptReserved">new</span> <span class="ActionScriptDefault_Text">SHA1</span>;
+                <span class="ActionScriptReserved">case</span> <span class="ActionScriptString">"sha224"</span>:
+                    <span class="ActionScriptReserved">return</span> <span class="ActionScriptReserved">new</span> <span class="ActionScriptDefault_Text">SHA224</span>;
+                <span class="ActionScriptReserved">case</span> <span class="ActionScriptString">"sha256"</span>:
+                    <span class="ActionScriptReserved">return</span> <span class="ActionScriptReserved">new</span> <span class="ActionScriptDefault_Text">SHA256</span>;
+            <span class="ActionScriptBracket/Brace">}</span>
+            <span class="ActionScriptReserved">return</span> <span class="ActionScriptReserved">null</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+        
+        <span class="ActionScriptASDoc">/**
+         * Things that should work:
+         * "sha1"
+         * "md5-64"
+         * "hmac-md5-96"
+         * "hmac-sha1-128"
+         * "hmac-sha256-192"
+         * etc.
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptReserved">static</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">getHMAC</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">name</span>:<span class="ActionScriptDefault_Text">String</span><span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">HMAC</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">keys</span>:<span class="ActionScriptDefault_Text">Array</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">name</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">split</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptString">"-"</span><span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptReserved">if</span> <span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">keys</span><span class="ActionScriptBracket/Brace">[</span>0<span class="ActionScriptBracket/Brace">]</span><span class="ActionScriptOperator">==</span><span class="ActionScriptString">"hmac"</span><span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptDefault_Text">keys</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">shift</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">bits</span>:<span class="ActionScriptDefault_Text">uint</span> <span class="ActionScriptOperator">=</span> 0;
+            <span class="ActionScriptReserved">if</span> <span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">keys</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">length</span><span class="ActionScriptOperator">&gt;</span>1<span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptBracket/Brace">{</span>
+                <span class="ActionScriptDefault_Text">bits</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">parseInt</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">keys</span><span class="ActionScriptBracket/Brace">[</span>1<span class="ActionScriptBracket/Brace">]</span><span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptBracket/Brace">}</span>
+            <span class="ActionScriptReserved">return</span> <span class="ActionScriptReserved">new</span> <span class="ActionScriptDefault_Text">HMAC</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">getHash</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">keys</span><span class="ActionScriptBracket/Brace">[</span>0<span class="ActionScriptBracket/Brace">]</span><span class="ActionScriptBracket/Brace">)</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">bits</span><span class="ActionScriptBracket/Brace">)</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+        
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptReserved">static</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">getPad</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">name</span>:<span class="ActionScriptDefault_Text">String</span><span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">IPad</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptReserved">switch</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">name</span><span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptBracket/Brace">{</span>
+                <span class="ActionScriptReserved">case</span> <span class="ActionScriptString">"null"</span>:
+                    <span class="ActionScriptReserved">return</span> <span class="ActionScriptReserved">new</span> <span class="ActionScriptDefault_Text">NullPad</span>;
+                <span class="ActionScriptReserved">case</span> <span class="ActionScriptString">"pkcs5"</span>:
+                <span class="ActionScriptReserved">default</span>:
+                    <span class="ActionScriptReserved">return</span> <span class="ActionScriptReserved">new</span> <span class="ActionScriptDefault_Text">PKCS5</span>;
+            <span class="ActionScriptBracket/Brace">}</span>
+        <span class="ActionScriptBracket/Brace">}</span>
+        
+        <span class="ActionScriptASDoc">/** mostly useless.
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptReserved">static</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">getRSA</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">E</span>:<span class="ActionScriptDefault_Text">String</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">M</span>:<span class="ActionScriptDefault_Text">String</span><span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">RSAKey</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptReserved">return</span> <span class="ActionScriptDefault_Text">RSAKey</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">parsePublicKey</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">M</span><span class="ActionScriptOperator">,</span><span class="ActionScriptDefault_Text">E</span><span class="ActionScriptBracket/Brace">)</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+    <span class="ActionScriptBracket/Brace">}</span>
+<span class="ActionScriptBracket/Brace">}</span></pre></body>
+</html>

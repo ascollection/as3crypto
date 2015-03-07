@@ -1,0 +1,158 @@
+<!-- saved from url=(0014)about:internet -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>BlowFishKeyTest.as</title>
+<link rel="stylesheet" type="text/css" href="../../../../../SourceStyles.css"/>
+</head>
+
+<body><pre><span class="ActionScriptASDoc">/**
+ * BlowFishKeyTest
+ * 
+ * A test class for BlowFishKey
+ * Copyright (c) 2007 Henri Torgemane
+ * 
+ * See LICENSE.txt for full license information.
+ */</span>
+<span class="ActionScriptpackage">package</span> <span class="ActionScriptDefault_Text">com</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">hurlant</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">crypto</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">tests</span>
+<span class="ActionScriptBracket/Brace">{</span>
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">com</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">hurlant</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">crypto</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">symmetric</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">BlowFishKey</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">com</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">hurlant</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">util</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">Hex</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">flash</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">utils</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">ByteArray</span>;
+    
+    <span class="ActionScriptReserved">public</span> <span class="ActionScriptclass">class</span> <span class="ActionScriptDefault_Text">BlowFishKeyTest</span> <span class="ActionScriptReserved">extends</span> <span class="ActionScriptDefault_Text">TestCase</span>
+    <span class="ActionScriptBracket/Brace">{</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">BlowFishKeyTest</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">h</span>:<span class="ActionScriptDefault_Text">ITestHarness</span><span class="ActionScriptBracket/Brace">)</span>
+        <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptReserved">super</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">h</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptString">"BlowFishKey Test"</span><span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptDefault_Text">runTest</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">testECB</span><span class="ActionScriptOperator">,</span><span class="ActionScriptString">"BlowFish ECB Test Vectors"</span><span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptDefault_Text">h</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">endTestCase</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+        
+        <span class="ActionScriptASDoc">/**
+         * Test vectors from http://www.schneier.com/code/vectors.txt
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">testECB</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptReserved">void</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">keys</span>:<span class="ActionScriptDefault_Text">Array</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptBracket/Brace">[</span>
+            <span class="ActionScriptString">"0000000000000000"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"FFFFFFFFFFFFFFFF"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"3000000000000000"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"1111111111111111"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"0123456789ABCDEF"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"1111111111111111"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"0000000000000000"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"FEDCBA9876543210"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"7CA110454A1A6E57"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"0131D9619DC1376E"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"07A1133E4A0B2686"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"3849674C2602319E"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"04B915BA43FEB5B6"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"0113B970FD34F2CE"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"0170F175468FB5E6"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"43297FAD38E373FE"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"07A7137045DA2A16"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"04689104C2FD3B2F"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"37D06BB516CB7546"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"1F08260D1AC2465E"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"584023641ABA6176"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"025816164629B007"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"49793EBC79B3258F"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"4FB05E1515AB73A7"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"49E95D6D4CA229BF"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"018310DC409B26D6"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"1C587F1C13924FEF"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"0101010101010101"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"1F1F1F1F0E0E0E0E"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"E0FEE0FEF1FEF1FE"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"0000000000000000"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"FFFFFFFFFFFFFFFF"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"0123456789ABCDEF"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"FEDCBA9876543210"</span> <span class="ActionScriptBracket/Brace">]</span>;
+            <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">pts</span>:<span class="ActionScriptDefault_Text">Array</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptBracket/Brace">[</span>
+            <span class="ActionScriptString">"0000000000000000"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"FFFFFFFFFFFFFFFF"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"1000000000000001"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"1111111111111111"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"1111111111111111"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"0123456789ABCDEF"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"0000000000000000"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"0123456789ABCDEF"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"01A1D6D039776742"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"5CD54CA83DEF57DA"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"0248D43806F67172"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"51454B582DDF440A"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"42FD443059577FA2"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"059B5E0851CF143A"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"0756D8E0774761D2"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"762514B829BF486A"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"3BDD119049372802"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"26955F6835AF609A"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"164D5E404F275232"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"6B056E18759F5CCA"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"004BD6EF09176062"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"480D39006EE762F2"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"437540C8698F3CFA"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"072D43A077075292"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"02FE55778117F12A"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"1D9D5C5018F728C2"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"305532286D6F295A"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"0123456789ABCDEF"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"0123456789ABCDEF"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"0123456789ABCDEF"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"FFFFFFFFFFFFFFFF"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"0000000000000000"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"0000000000000000"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"FFFFFFFFFFFFFFFF"</span> <span class="ActionScriptBracket/Brace">]</span>;
+            <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">cts</span>:<span class="ActionScriptDefault_Text">Array</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptBracket/Brace">[</span>
+            <span class="ActionScriptString">"4EF997456198DD78"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"51866FD5B85ECB8A"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"7D856F9A613063F2"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"2466DD878B963C9D"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"61F9C3802281B096"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"7D0CC630AFDA1EC7"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"4EF997456198DD78"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"0ACEAB0FC6A0A28D"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"59C68245EB05282B"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"B1B8CC0B250F09A0"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"1730E5778BEA1DA4"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"A25E7856CF2651EB"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"353882B109CE8F1A"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"48F4D0884C379918"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"432193B78951FC98"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"13F04154D69D1AE5"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"2EEDDA93FFD39C79"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"D887E0393C2DA6E3"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"5F99D04F5B163969"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"4A057A3B24D3977B"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"452031C1E4FADA8E"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"7555AE39F59B87BD"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"53C55F9CB49FC019"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"7A8E7BFA937E89A3"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"CF9C5D7A4986ADB5"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"D1ABB290658BC778"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"55CB3774D13EF201"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"FA34EC4847B268B2"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"A790795108EA3CAE"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"C39E072D9FAC631D"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"014933E0CDAFF6E4"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"F21E9A77B71C49BC"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"245946885754369A"</span><span class="ActionScriptOperator">,</span>
+            <span class="ActionScriptString">"6B5C5A9C5D9E0A5A"</span> <span class="ActionScriptBracket/Brace">]</span>;
+
+            <span class="ActionScriptReserved">for</span> <span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">i</span>:<span class="ActionScriptDefault_Text">uint</span><span class="ActionScriptOperator">=</span>0;<span class="ActionScriptDefault_Text">i</span><span class="ActionScriptOperator">&lt;</span><span class="ActionScriptDefault_Text">keys</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">length</span>;<span class="ActionScriptDefault_Text">i</span><span class="ActionScriptOperator">++</span><span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptBracket/Brace">{</span>
+                <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">key</span>:<span class="ActionScriptDefault_Text">ByteArray</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">Hex</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">toArray</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">keys</span><span class="ActionScriptBracket/Brace">[</span><span class="ActionScriptDefault_Text">i</span><span class="ActionScriptBracket/Brace">]</span><span class="ActionScriptBracket/Brace">)</span>;
+                <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">pt</span>:<span class="ActionScriptDefault_Text">ByteArray</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">Hex</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">toArray</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">pts</span><span class="ActionScriptBracket/Brace">[</span><span class="ActionScriptDefault_Text">i</span><span class="ActionScriptBracket/Brace">]</span><span class="ActionScriptBracket/Brace">)</span>;
+                <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">bf</span>:<span class="ActionScriptDefault_Text">BlowFishKey</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptReserved">new</span> <span class="ActionScriptDefault_Text">BlowFishKey</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">key</span><span class="ActionScriptBracket/Brace">)</span>;
+                <span class="ActionScriptDefault_Text">bf</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">encrypt</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">pt</span><span class="ActionScriptBracket/Brace">)</span>;
+                <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">out</span>:<span class="ActionScriptDefault_Text">String</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">Hex</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">fromArray</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">pt</span><span class="ActionScriptBracket/Brace">)</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">toUpperCase</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>;
+                <span class="ActionScriptDefault_Text">assert</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptString">"comparing "</span><span class="ActionScriptOperator">+</span><span class="ActionScriptDefault_Text">cts</span><span class="ActionScriptBracket/Brace">[</span><span class="ActionScriptDefault_Text">i</span><span class="ActionScriptBracket/Brace">]</span><span class="ActionScriptOperator">+</span><span class="ActionScriptString">" to "</span><span class="ActionScriptOperator">+</span><span class="ActionScriptDefault_Text">out</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">cts</span><span class="ActionScriptBracket/Brace">[</span><span class="ActionScriptDefault_Text">i</span><span class="ActionScriptBracket/Brace">]</span><span class="ActionScriptOperator">==</span><span class="ActionScriptDefault_Text">out</span><span class="ActionScriptBracket/Brace">)</span>;
+                <span class="ActionScriptComment">// now go back to plaintext
+</span>                <span class="ActionScriptDefault_Text">bf</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">decrypt</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">pt</span><span class="ActionScriptBracket/Brace">)</span>;
+                <span class="ActionScriptDefault_Text">out</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">Hex</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">fromArray</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">pt</span><span class="ActionScriptBracket/Brace">)</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">toUpperCase</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>;
+                <span class="ActionScriptDefault_Text">assert</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptString">"comparing "</span><span class="ActionScriptOperator">+</span><span class="ActionScriptDefault_Text">pts</span><span class="ActionScriptBracket/Brace">[</span><span class="ActionScriptDefault_Text">i</span><span class="ActionScriptBracket/Brace">]</span><span class="ActionScriptOperator">+</span><span class="ActionScriptString">" to "</span><span class="ActionScriptOperator">+</span><span class="ActionScriptDefault_Text">out</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">pts</span><span class="ActionScriptBracket/Brace">[</span><span class="ActionScriptDefault_Text">i</span><span class="ActionScriptBracket/Brace">]</span><span class="ActionScriptOperator">==</span><span class="ActionScriptDefault_Text">out</span><span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptBracket/Brace">}</span>
+        <span class="ActionScriptBracket/Brace">}</span>
+    <span class="ActionScriptBracket/Brace">}</span>
+<span class="ActionScriptBracket/Brace">}</span></pre></body>
+</html>
